@@ -128,19 +128,23 @@ watch([cookies, upgrades ],() => {
         @buy="buyUpgrade(upgrade)"
       ></Upgrade>
     </div>
-    <button @click="cookies++">Bake Cookie</button>
+    <div class="btns">
+      <button @click="cookies++">Bake Cookie</button>
+      <reset/>
+    </div>
     <GoldenCookie
-    v-if="showGolden"
-    @clicked="collectGoldenCookie"
+      v-if="showGolden"
+      @clicked="collectGoldenCookie"
     />
-    <reset/>
   </div>
 </template>
 
 <style scoped>
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+h1 {
+  margin-bottom: 20px;
+}
+
+.btns {
+  margin-top: 20px;
 }
 </style>

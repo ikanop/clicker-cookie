@@ -30,7 +30,7 @@ function formatNumber(num) {
 
 <template>
   <div>
-    <p>{{ name }}: {{ count }}</p>
+    <h2>{{ name }}: {{ count }}</h2>
     <button @click="$emit('buy')">
       Buy {{ name }} ({{ formatNumber(price) }} cookies)
     </button>

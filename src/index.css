@@ -1,3 +1,38 @@
+:root {
+   button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;                   /* white text for dark mode */
+    background-color: #333;        /* dark button background */
+    border: 1px solid #555;        /* subtle border */
+    border-radius: 8px;             /* rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* soft shadow */
+  }
+
+  button:hover {
+    background-color: #444;         /* slightly lighter on hover */
+    transform: translateY(-2px);    /* subtle lift */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4); /* stronger shadow */
+  }
+
+  button:active {
+    background-color: #222;         /* darker on click */
+    transform: translateY(0);       /* press effect */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+
+  button:disabled {
+    background-color: #555;         /* muted for disabled */
+    color: #999;
+    border-color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
