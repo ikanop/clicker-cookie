@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import {ref, onMounted, watch} from 'vue'
 import Upgrade from './Upgrade.vue'
 import GoldenCookie from './GoldenCookie.vue'
 import Reset from './reset.vue'
-import { provide } from 'vue'
+import {provide} from 'vue'
 
 const cookies = ref(0)
 const showGolden = ref(false)
@@ -19,10 +19,10 @@ function spawnGoldenCookie() {
   setTimeout(() => {
     if (Math.random() < 0.05) {
       showGolden.value = true
-    setTimeout(() => {
-      showGolden.value = false
-    }, 10000)
-  }
+      setTimeout(() => {
+        showGolden.value = false
+      }, 10000)
+    }
     spawnGoldenCookie()
   }, delay)
 }
@@ -76,35 +76,7 @@ onMounted(() => {
   spawnGoldenCookie()
 })
 
-
-
-function formatNumber(num) {
-  if (typeof num !== 'number' || isNaN(num)) return '0'
-
-  const units = [
-    { value: 1e30, symbol: 'N' },   // Nonillion
-    { value: 1e27, symbol: 'O' },   // Octillion
-    { value: 1e24, symbol: 'S' },   // Septillion
-    { value: 1e21, symbol: 's' },   // Sextillion
-    { value: 1e18, symbol: 'Qn' },  // Quintillion
-    { value: 1e15, symbol: 'Q' },   // Quadrillion
-    { value: 1e12, symbol: 'T' },   // Trillion
-    { value: 1e9,  symbol: 'B' },   // Billion
-    { value: 1e6,  symbol: 'M' },   // Million
-    { value: 1e3,  symbol: 'K' }    // Thousand
-  ]
-
-  for (const unit of units) {
-    if (num >= unit.value) {
-      const formatted = (num / unit.value).toFixed(1).replace(/\.0$/, '')
-      return `${formatted}${unit.symbol}`
-    }
-  }
-
-  return num.toLocaleString()
-}
-
-watch([cookies, upgrades ],() => {
+watch([cookies, upgrades], () => {
   const saveData = {
     cookies: cookies.value,
     upgrades: upgrades.value.map(u => ({
