@@ -1,9 +1,29 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import grandma from './Grandma.vue'
 import Upgrade from './Upgrade.vue'
+import GoldenCookie from './GoldenCookie.vue'
 
 const cookies = ref(0)
+const showGolden = ref(false)
+
+function collectGoldenCookie() {
+  const bonus = Math.floor(cookies.value * 0.15 + 13)
+  cookies.value += bonus
+  showGolden.value = false
+}
+
+function spawnGoldenCookie() {
+  const delay = Math.random() * 10000 + 5000
+  setTimeout(() => {
+    if (Math.random() < 0.05) {
+      showGolden.value = true
+    setTimeout(() => {
+      showGolden.value = false
+    }, 10000)
+  }
+    spawnGoldenCookie()
+  }, delay)
+}
 
 const upgrades = ref([
   {name: 'Grandma', count: 0, price: 100, cps: 1},
@@ -32,6 +52,18 @@ setInterval(() => {
   }
 }, 1000)
 
+watch([cookies, upgrades ],() => {
+  const saveData = {
+    cookies: cookies.value,
+    upgrades: upgrades.value.map(u => ({
+      name: u.name,
+      count: u.count,
+      price: u.price
+    }))
+  }
+  localStorage.setItem('cookieSave', JSON.stringify(saveData))
+})
+
 onMounted(() => {
   const saved = localStorage.getItem('cookieSave')
   if (saved) {
@@ -47,19 +79,9 @@ onMounted(() => {
       }
     })
   }
+  spawnGoldenCookie()
 })
 
-watch([cookies, upgrades ],() => {
-  const saveData = {
-    cookies: cookies.value,
-    upgrades: upgrades.value.map(u => ({
-      name: u.name,
-      count: u.count,
-      price: u.price
-    }))
-  }
-  localStorage.setItem('cookieSave', JSON.stringify(saveData))
-})
 </script>
 
 <template>
@@ -74,6 +96,10 @@ watch([cookies, upgrades ],() => {
       />
     </div>
     <button @click="cookies++">Bake Cookie</button>
+    <GoldenCookie
+    v-if="showGolden"
+    @clicked="collectGoldenCookie"
+    />
   </div>
 </template>
 
