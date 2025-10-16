@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onMounted, watch} from 'vue'
 import Upgrade from './Upgrade.vue'
+import {formatNumber} from "../utils/format.js";
 import GoldenCookie from './GoldenCookie.vue'
 import Reset from './reset.vue'
 import {provide} from 'vue'
@@ -28,17 +29,17 @@ function spawnGoldenCookie() {
 }
 
 const upgrades = ref([
-  {name: 'Autoclicker', count: 0, price: 15, cps: 0.1},
-  {name: 'Grandma', count: 0, price: 100, cps: 1},
-  {name: 'Farm', count: 0, price: 1200, cps: 8},
-  {name: 'Mine', count: 0, price: 12000, cps: 47},
-  {name: 'Factory', count: 0, price: 130000, cps: 260},
-  {name: 'Bank', count: 0, price: 1.4e6, cps: 1400},
-  {name: 'Temple', count: 0, price: 2.0e7, cps: 7800},
-  {name: 'Wizard Tower', count: 0, price: 3.3e8, cps: 44000},
-  {name: 'Shipment', count: 0, price: 5.1e9, cps: 260000},
-  {name: 'Alchemy Lab', count: 0, price: 7.5e10, cps: 1.6e6},
-  {name: 'Portal', count: 0, price: 1.0e12, cps: 1.0e7}
+  {name: 'Autoclicker', count: 0, price: 15, cps: 0.1, revealed: false},
+  {name: 'Grandma', count: 0, price: 100, cps: 1, revealed: false},
+  {name: 'Farm', count: 0, price: 1200, cps: 8, revealed: false},
+  {name: 'Mine', count: 0, price: 12000, cps: 47, revealed: false},
+  {name: 'Factory', count: 0, price: 130000, cps: 260, revealed: false},
+  {name: 'Bank', count: 0, price: 1.4e6, cps: 1400, revealed: false},
+  {name: 'Temple', count: 0, price: 2.0e7, cps: 7800, revealed: false},
+  {name: 'Wizard Tower', count: 0, price: 3.3e8, cps: 44000, revealed: false},
+  {name: 'Shipment', count: 0, price: 5.1e9, cps: 260000, revealed: false},
+  {name: 'Alchemy Lab', count: 0, price: 7.5e10, cps: 1.6e6, revealed: false},
+  {name: 'Portal', count: 0, price: 1.0e12, cps: 1.0e7, revealed: false}
 ])
 
 provide('cookies', cookies)
@@ -70,10 +71,19 @@ onMounted(() => {
       if (savedUpg) {
         upg.price = savedUpg.price ?? upg.price
         upg.count = savedUpg.count ?? upg.count
+        upg.revealed = savedUpg.revealed ?? false
       }
     })
   }
   spawnGoldenCookie()
+})
+
+watch(cookies, (newCookies) => {
+  upgrades.value.forEach(upg => {
+    if (!upg.revealed && newCookies >= upg.price * 0.9) {
+      upg.revealed = true
+    }
+  })
 })
 
 watch([cookies, upgrades], () => {
@@ -82,7 +92,8 @@ watch([cookies, upgrades], () => {
     upgrades: upgrades.value.map(u => ({
       name: u.name,
       count: u.count,
-      price: u.price
+      price: u.price,
+      revealed: u.revealed
     }))
   }
   localStorage.setItem('cookieSave', JSON.stringify(saveData))
@@ -91,16 +102,18 @@ watch([cookies, upgrades], () => {
 
 <template>
   <div>
-    <h1>Cookies: {{ Math.round(cookies).toLocaleString() }}</h1>
+    <h1>Cookies: {{ formatNumber(cookies) }}</h1>
     <div v-for="upgrade in upgrades" :key="upgrade.name">
       <Upgrade
         :name="upgrade.name"
         :count="upgrade.count"
+        :cps="upgrade.cps"
         :price="upgrade.price"
+        :revealed="upgrade.revealed"
         @buy="buyUpgrade(upgrade)"
       ></Upgrade>
     </div>
-    <div class="btns">
+    <div class="btn">
       <button @click="cookies++">Bake Cookie</button>
       <reset/>
     </div>
@@ -116,7 +129,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-.btns {
+.btn {
   margin-top: 20px;
 }
 </style>
