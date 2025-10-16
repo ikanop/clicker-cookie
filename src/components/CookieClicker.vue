@@ -8,6 +8,7 @@ import {provide} from 'vue'
 
 const cookies = ref(0)
 const showGolden = ref(false)
+const clickPower = ref(1)
 
 function collectGoldenCookie() {
   const bonus = Math.floor(cookies.value * 0.15 + 13)
@@ -39,7 +40,8 @@ const upgrades = ref([
   {name: 'Wizard Tower', count: 0, price: 3.3e8, cps: 44000, revealed: false},
   {name: 'Shipment', count: 0, price: 5.1e9, cps: 260000, revealed: false},
   {name: 'Alchemy Lab', count: 0, price: 7.5e10, cps: 1.6e6, revealed: false},
-  {name: 'Portal', count: 0, price: 1.0e12, cps: 1.0e7, revealed: false}
+  {name: 'Portal', count: 0, price: 1.0e12, cps: 1.0e7, revealed: false},
+  {name: 'Click Multiplier', count: 0, price: 100, cps: 0, revealed: true}
 ])
 
 provide('cookies', cookies)
@@ -49,7 +51,13 @@ function buyUpgrade(upgrade) {
   if (cookies.value >= upgrade.price) {
     cookies.value -= upgrade.price
     upgrade.count++
-    upgrade.price *= 1.15
+
+    if (upgrade.name === 'Click Multiplier') {
+      clickPower.value *= 2
+      upgrade.price *= 5
+    } else {
+      upgrade.price *= 1.15
+    }
   }
 }
 
@@ -114,7 +122,7 @@ watch([cookies, upgrades], () => {
       ></Upgrade>
     </div>
     <div class="btn">
-      <button @click="cookies++">Bake Cookie</button>
+      <button @click="cookies += clickPower">Bake Cookie</button>
       <reset/>
     </div>
     <GoldenCookie

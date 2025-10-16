@@ -1,6 +1,6 @@
 <script setup>
 import {defineProps, defineEmits} from 'vue'
-import {formatNumber, formatAutoclicker} from "../utils/format.js";
+import {formatNumber} from "../utils/format.js";
 
 defineProps({
   name: String,
@@ -17,10 +17,7 @@ defineEmits(['buy'])
   <div>
     {{
       revealed
-        ? `${name}: ${count} (CPS: ${
-          name === 'Autoclicker' ? formatAutoclicker(cps * count) : formatNumber(cps * count)
-        })`
-        : '???'
+        ? `${name}: ${count} (CPS: ${formatNumber(cps * count)})` : '???'
     }}
     <button v-if="revealed" @click="$emit('buy')">
       {{ name }} ({{ formatNumber(price) }} cookies)

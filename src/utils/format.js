@@ -1,41 +1,29 @@
 // src/utils/format.js
 
-export function formatNumber(num) {
+export function formatNumber(num, noDecimals = false) {
   if (typeof num !== 'number' || isNaN(num)) return '0';
   if (num === 0) return '0';
 
-  if (num < 10) return (Math.round(num * 10) / 10).toFixed(1); // small numbers <10
-  if (num < 1000) return Math.floor(num).toString();            // 10–999 → whole numbers
+  if (num < 1_000_000) {
+    return noDecimals
+      ? Math.floor(num).toLocaleString()
+      : Number(num.toFixed(1).replace(/\.0$/, '')).toLocaleString();
+  }
 
-  // >=1000 → scale with K/M/B...
-  const units = ["K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid"];
-  let scaled = num;
-  let unitIndex = -1;
+  const units = ["M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid"];
+  let scaled = num / 1_000_000;
+  let unitIndex = 0;
 
   while (scaled >= 1000 && unitIndex < units.length - 1) {
     scaled /= 1000;
     unitIndex++;
   }
 
-  return (Math.round(scaled * 10) / 10).toFixed(1).replace(/\.0$/, '') + units[unitIndex];
-}
-
-export function formatAutoclicker(num) {
-  if (typeof num !== 'number' || isNaN(num)) return '0';
-  if (num === 0) return '0';
-
-  if (num < 100) return (Math.round(num * 10) / 10).toFixed(1); // numbers <100 → 1 decimal
-  if (num < 1000) return Math.floor(num).toLocaleString();      // 100–999 → integer with commas
-
-  // >=1000 → scale like formatNumber
-  const units = ["K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid"];
-  let scaled = num;
-  let unitIndex = -1;
-
-  while (scaled >= 1000 && unitIndex < units.length - 1) {
-    scaled /= 1000;
-    unitIndex++;
+  // No decimals for prices or when explicitly requested
+  if (noDecimals) {
+    return Math.floor(scaled) + units[unitIndex];
   }
 
-  return (Math.round(scaled * 10) / 10).toFixed(1).replace(/\.0$/, '') + units[unitIndex];
+  // Scaled numbers with up to 3 decimals, strip unnecessary zeros
+  return Number(scaled.toFixed(3).replace(/\.?0+$/, '')) + units[unitIndex];
 }
