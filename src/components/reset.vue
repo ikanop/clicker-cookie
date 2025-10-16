@@ -1,5 +1,6 @@
 <script setup>
-import { inject } from 'vue'
+import {inject} from 'vue'
+
 const cookies = inject('cookies')
 const upgrades = inject('upgrades')
 
@@ -8,6 +9,7 @@ function resetgame() {
   upgrades.value.forEach(upg => {
     upg.count = 0
     upg.price = getBasePrice(upg.name)
+    upg.revealed = false
   })
   localStorage.removeItem('cookieSave')
 }
