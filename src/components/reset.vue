@@ -9,7 +9,7 @@ function resetgame() {
   upgrades.value.forEach(upg => {
     upg.count = 0
     upg.price = getBasePrice(upg.name)
-    upg.revealed = false
+    upg.revealed = upg.name === 'Click Multiplier' ? true : false;
   })
   localStorage.removeItem('cookieSave')
 }
@@ -26,8 +26,9 @@ function getBasePrice(name) {
     {name: 'Wizard Tower', price: 3.3e8},
     {name: 'Shipment', price: 5.1e9},
     {name: 'Alchemy Lab', price: 7.5e10},
-    {name: 'Portal', price: 1.0e12}
-  ]
+    {name: 'Portal', price: 1.0e12},
+    {name: 'Click Multiplier', price: 100}
+  ];
   return base.find(u => u.name === name)?.price ?? 0
 }
 </script>

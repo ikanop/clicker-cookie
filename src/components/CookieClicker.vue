@@ -41,7 +41,7 @@ const upgrades = ref([
   {name: 'Shipment', count: 0, price: 5.1e9, cps: 260000, revealed: false},
   {name: 'Alchemy Lab', count: 0, price: 7.5e10, cps: 1.6e6, revealed: false},
   {name: 'Portal', count: 0, price: 1.0e12, cps: 1.0e7, revealed: false},
-  {name: 'Click Multiplier', count: 0, price: 100, cps: 0, revealed: true}
+  {name: 'Click Multiplier', count: 0, price: 100, cps: 0, revealed: false}
 ])
 
 provide('cookies', cookies)
